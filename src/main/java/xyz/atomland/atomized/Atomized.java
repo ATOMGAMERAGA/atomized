@@ -10,6 +10,7 @@ import xyz.atomland.atomized.core.ModuleManager;
 import xyz.atomland.atomized.diagnostics.DiagnosticsModule;
 import xyz.atomland.atomized.gui.AtomizedKeybinds;
 import xyz.atomland.atomized.modules.framepacing.FramePacingModule;
+import xyz.atomland.atomized.modules.loadgovernor.LoadGovernorModule;
 
 /**
  * Client entrypoint for Atomized.
@@ -37,6 +38,7 @@ public final class Atomized implements ClientModInitializer {
         // Optimization modules are registered here as they land (milestones M3/M4).
         manager.register(new DiagnosticsModule());
         manager.register(new FramePacingModule());
+        manager.register(new LoadGovernorModule());
         manager.initAll(boot.configManager().current(), boot.compat());
         boot.configManager().addListener(manager::onConfigChange);
         moduleManager = manager;
