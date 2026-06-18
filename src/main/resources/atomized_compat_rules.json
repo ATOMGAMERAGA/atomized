@@ -20,8 +20,8 @@
       }
     },
     { "mod": "memoryleakfix", "name": "Memory Leak Fix", "restricts": { "memory_relief": ["leak_patch"] } },
-    { "mod": "particlecore", "name": "ParticleCore", "restricts": { "particle_control": ["ticking_skip"] } },
-    { "mod": "particle_rain", "name": "Particle Rain", "restricts": { "particle_control": ["ticking_skip"] } },
+    { "mod": "particle_core", "name": "ParticleCore", "restricts": { "particle_control": ["ticking_skip"] } },
+    { "mod": "particlerain", "name": "Particle Rain", "restricts": { "particle_control": ["ticking_skip"] } },
     { "mod": "smoothchunksave", "name": "Smooth Chunk Save", "restricts": { "sp_boost": ["autosave_smoothing"] } },
     { "mod": "ksyxis", "name": "Ksyxis", "restricts": { "sp_boost": ["world_load_spread"] } }
   ]

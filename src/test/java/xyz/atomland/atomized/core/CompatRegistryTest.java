@@ -180,6 +180,34 @@ class CompatRegistryTest {
         assertTrue(compat.restrictedSubFeatures("sp_boost").contains("autosave_smoothing"));
     }
 
+    private static CompatRegistry bundledWith(String... loadedMods) {
+        Set<String> loaded = Set.of(loadedMods);
+        return CompatRegistry.load(loaded::contains);
+    }
+
+    @Test
+    void bundledRulesUseRealVerifiedModIds() {
+        // These ids were verified on 2026-06-18 against the actual fabric.mod.json of each
+        // mod's current 1.21.x release on Modrinth (tools/ scan). A typo here means the
+        // auto-disable gate silently never fires, so lock them down against the bundled file.
+        assertEquals(Optional.of("entityculling"), bundledWith("entityculling").disabledBy("smart_culling"));
+        assertEquals(Optional.of("moreculling"), bundledWith("moreculling").disabledBy("smart_culling"));
+        assertEquals(Optional.of("dynamic_fps"), bundledWith("dynamic_fps").disabledBy("idle_throttle"));
+        assertEquals(Optional.of("c2me"), bundledWith("c2me").disabledBy("chunk_smooth"));
+        assertEquals(Optional.of("vulkanmod"), bundledWith("vulkanmod").disabledBy("frame_pacing"));
+        assertTrue(bundledWith("immediatelyfast").restrictedSubFeatures("gui_opt").contains("hud_cache"));
+        assertTrue(bundledWith("particle_core").restrictedSubFeatures("particle_control").contains("ticking_skip"));
+        assertTrue(bundledWith("particlerain").restrictedSubFeatures("particle_control").contains("ticking_skip"));
+    }
+
+    @Test
+    void bundledRulesDoNotUseTheOldBuggyParticleIds() {
+        // Regression guard for the 2026-06-18 fix: the real ids are particle_core / particlerain,
+        // NOT particlecore / particle_rain.
+        assertTrue(bundledWith("particlecore").restrictedSubFeatures("particle_control").isEmpty());
+        assertTrue(bundledWith("particle_rain").restrictedSubFeatures("particle_control").isEmpty());
+    }
+
     @Test
     void bundledRulesNeverDisableDiagnosticsOrLoadGovernor() {
         // §6.4 and §6.10: these modules have no compat gates by design.
