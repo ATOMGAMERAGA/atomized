@@ -8,6 +8,10 @@ versions/**/build/
 run/
 runs/
 versions/**/run/
+versions/**/config/
+versions/**/logs/
+versions/**/saves/
+versions/**/crash-reports/
 
 # IDE
 .idea/

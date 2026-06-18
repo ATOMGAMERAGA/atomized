@@ -36,6 +36,14 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+
+    testImplementation("net.fabricmc:fabric-loader-junit:${property("fabric_loader_version")}")
+    // Same version as fabric-loader-junit's imported junit-bom.
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 java {

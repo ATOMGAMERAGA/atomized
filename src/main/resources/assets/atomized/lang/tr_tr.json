@@ -1,5 +1,13 @@
 {
   "modmenu.descriptionTranslation.atomized": "Tamamlayıcı performans modu. Daha yüksek FPS, daha az drop, cam gibi akıcı kare süreleri — Sodium'un yanında kusursuz çalışmak için tasarlandı.",
   "atomized.name": "Atomized",
-  "atomized.slogan": "Tasarımı gereği akıcı."
+  "atomized.slogan": "Tasarımı gereği akıcı.",
+  "atomized.command.status.header": "⚛ Atomized modül durumu:",
+  "atomized.command.status.enabled": " §a●§r %s — etkin",
+  "atomized.command.status.disabled_config": " §7●§r %s — config'te kapalı",
+  "atomized.command.status.disabled_conflict": " §e●§r %s — otomatik kapatıldı (%s algılandı)",
+  "atomized.command.status.disabled_version": " §7●§r %s — bu Minecraft sürümünde kullanılamaz (%s gerekli)",
+  "atomized.command.status.failed": " §c●§r %s — hata verdi ve güvenle kapatıldı (%s)",
+  "atomized.command.status.no_modules": "Henüz kayıtlı optimizasyon modülü yok (erken geliştirme sürümü).",
+  "atomized.command.reloaded": "⚛ Atomized config yeniden yüklendi."
 }

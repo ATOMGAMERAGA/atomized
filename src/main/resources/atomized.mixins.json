@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "xyz.atomland.atomized.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "xyz.atomland.atomized.mixinsupport.AtomizedMixinPlugin",
   "client": [],
   "injectors": {
     "defaultRequire": 1
