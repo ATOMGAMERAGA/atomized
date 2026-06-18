@@ -10,6 +10,7 @@ import xyz.atomland.atomized.core.ModuleManager;
 import xyz.atomland.atomized.diagnostics.DiagnosticsModule;
 import xyz.atomland.atomized.gui.AtomizedKeybinds;
 import xyz.atomland.atomized.modules.framepacing.FramePacingModule;
+import xyz.atomland.atomized.modules.idlethrottle.IdleThrottleModule;
 import xyz.atomland.atomized.modules.loadgovernor.LoadGovernorModule;
 import xyz.atomland.atomized.modules.particlecontrol.ParticleControlModule;
 
@@ -41,6 +42,7 @@ public final class Atomized implements ClientModInitializer {
         manager.register(new FramePacingModule());
         manager.register(new LoadGovernorModule());
         manager.register(new ParticleControlModule());
+        manager.register(new IdleThrottleModule());
         manager.initAll(boot.configManager().current(), boot.compat());
         boot.configManager().addListener(manager::onConfigChange);
         moduleManager = manager;
