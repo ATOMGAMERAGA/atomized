@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "xyz.atomland.atomized.Atomized"
+    ],
+    "modmenu": [
+      "xyz.atomland.atomized.compat.ModMenuIntegration"
     ]
   },
   "mixins": [

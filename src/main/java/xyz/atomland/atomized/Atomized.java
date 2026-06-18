@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.atomland.atomized.command.AtomizedCommand;
 import xyz.atomland.atomized.core.ModuleManager;
+import xyz.atomland.atomized.gui.AtomizedKeybinds;
 
 /**
  * Client entrypoint for Atomized.
@@ -37,6 +38,7 @@ public final class Atomized implements ClientModInitializer {
         moduleManager = manager;
 
         AtomizedCommand.register(manager, boot.configManager(), boot.compat());
+        AtomizedKeybinds.register();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             manager.tickAll();
