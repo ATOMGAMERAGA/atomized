@@ -8,6 +8,8 @@
 
 A complementary client-side performance mod for Fabric — designed to run flawlessly **alongside** Sodium, covering the areas Sodium does not touch.
 
+[![CI](https://github.com/ATOMGAMERAGA/Atomized/actions/workflows/ci.yml/badge.svg)](https://github.com/ATOMGAMERAGA/Atomized/actions/workflows/ci.yml)
+
 [Website](https://atomland.xyz) · [Issues](https://github.com/ATOMGAMERAGA/Atomized/issues) · [Master Plan](ATOMIZED_MASTER_PLAN.md)
 
 </div>
