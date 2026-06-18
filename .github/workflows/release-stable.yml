@@ -1,0 +1,54 @@
+name: Stable Release
+
+# Manually triggered: run the full pipeline, then publish a stable release with the
+# version the maintainer enters.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Stable version (e.g. 1.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  pipeline:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: pipeline
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Clean package with explicit version
+        run: ./gradlew clean chiseledBuild -Pversion_override=${{ inputs.version }}
+
+      - name: Collect jars
+        run: |
+          mkdir -p dist
+          find . -path '*/build/libs/atomized-*.jar' ! -name '*-sources.jar' ! -name '*-dev*.jar' -exec cp {} dist/ \;
+          ls -la dist/
+
+      - name: Create STABLE release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ inputs.version }}" dist/*.jar \
+            --title "Atomized ${{ inputs.version }}" \
+            --generate-notes

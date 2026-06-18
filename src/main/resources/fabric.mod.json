@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "atomized",
+  "version": "${version}",
+  "name": "Atomized",
+  "description": "Complementary performance mod. Higher FPS, fewer drops, buttery-smooth frametimes — designed to run flawlessly alongside Sodium. / Sodium'un yanında kusursuz çalışan tamamlayıcı performans modu.",
+  "authors": [
+    "Atom Gamer Arda A.G.A"
+  ],
+  "contact": {
+    "homepage": "https://atomland.xyz",
+    "sources": "https://github.com/ATOMGAMERAGA/Atomized",
+    "issues": "https://github.com/ATOMGAMERAGA/Atomized/issues"
+  },
+  "license": "BSD-3-Clause",
+  "icon": "assets/atomized/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "xyz.atomland.atomized.Atomized"
+    ],
+    "modmenu": [
+      "xyz.atomland.atomized.compat.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "atomized.mixins.json"
+  ],
+  "accessWidener": "atomized.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_range}",
+    "java": ">=21"
+  },
+  "suggests": {
+    "sodium": "*",
+    "modmenu": "*"
+  },
+  "breaks": {
+    "optifabric": "*"
+  },
+  "conflicts": {
+    "vulkanmod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "atomland.xyz": "https://atomland.xyz"
+      }
+    }
+  }
+}

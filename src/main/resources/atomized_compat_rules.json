@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "_comment": "Data-driven compat matrix (master plan §8). 'disables' turns whole modules off; 'restricts' turns named sub-features off while the rest of the module keeps working.",
+  "rules": [
+    { "mod": "entityculling", "name": "EntityCulling", "disables": ["smart_culling"] },
+    { "mod": "moreculling", "name": "MoreCulling", "disables": ["smart_culling"] },
+    { "mod": "dynamic_fps", "name": "Dynamic FPS", "disables": ["idle_throttle"] },
+    { "mod": "c2me", "name": "C2ME", "disables": ["chunk_smooth"] },
+    {
+      "mod": "vulkanmod",
+      "name": "VulkanMod",
+      "disables": ["frame_pacing", "smart_culling", "particle_control", "gui_opt", "chunk_smooth"]
+    },
+    {
+      "mod": "immediatelyfast",
+      "name": "ImmediatelyFast",
+      "restricts": {
+        "gui_opt": ["hud_cache", "screen_background_cache"],
+        "memory_relief": ["hud_cache"]
+      }
+    },
+    { "mod": "memoryleakfix", "name": "Memory Leak Fix", "restricts": { "memory_relief": ["leak_patch"] } },
+    { "mod": "particle_core", "name": "ParticleCore", "restricts": { "particle_control": ["ticking_skip"] } },
+    { "mod": "particlerain", "name": "Particle Rain", "restricts": { "particle_control": ["ticking_skip"] } },
+    { "mod": "smoothchunksave", "name": "Smooth Chunk Save", "restricts": { "sp_boost": ["autosave_smoothing"] } },
+    { "mod": "ksyxis", "name": "Ksyxis", "restricts": { "sp_boost": ["world_load_spread"] } }
+  ]
+}

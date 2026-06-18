@@ -1,0 +1,36 @@
+{
+  "modmenu.descriptionTranslation.atomized": "Complementary performance mod. Higher FPS, fewer drops, buttery-smooth frametimes — designed to run flawlessly alongside Sodium.",
+  "atomized.name": "Atomized",
+  "atomized.slogan": "Smooth by design.",
+
+  "key.atomized.settings": "Open Atomized Settings",
+  "key.categories.atomized": "Atomized",
+
+  "atomized.screen.title": "⚛ Atomized Settings",
+  "atomized.screen.on": "ON",
+  "atomized.screen.off": "OFF",
+  "atomized.screen.empty": "No optimization modules registered yet (early development build).",
+  "atomized.screen.row.conflict": "%s — disabled (%s detected)",
+  "atomized.screen.row.version": "%s — unsupported on this version",
+  "atomized.screen.row.failed": "%s — failed, disabled safely",
+
+  "atomized.module.smart_culling": "Smart Culling",
+  "atomized.module.particle_control": "Particle Control",
+  "atomized.module.frame_pacing": "Frame Pacing",
+  "atomized.module.load_governor": "Load Governor",
+  "atomized.module.idle_throttle": "Idle Throttle",
+  "atomized.module.memory_relief": "Memory Relief",
+  "atomized.module.gui_opt": "GUI Optimization",
+  "atomized.module.chunk_smooth": "Chunk Smoothing",
+  "atomized.module.sp_boost": "Singleplayer Boost",
+  "atomized.module.diagnostics": "Diagnostics",
+
+  "atomized.command.status.header": "⚛ Atomized module status:",
+  "atomized.command.status.enabled": " §a●§r %s — enabled",
+  "atomized.command.status.disabled_config": " §7●§r %s — disabled in config",
+  "atomized.command.status.disabled_conflict": " §e●§r %s — auto-disabled (%s detected)",
+  "atomized.command.status.disabled_version": " §7●§r %s — unavailable on this Minecraft version (needs %s)",
+  "atomized.command.status.failed": " §c●§r %s — failed and shut down safely (%s)",
+  "atomized.command.status.no_modules": "No optimization modules registered yet (early development build).",
+  "atomized.command.reloaded": "⚛ Atomized config reloaded."
+}

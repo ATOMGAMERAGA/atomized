@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "xyz.atomland.atomized.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "xyz.atomland.atomized.mixinsupport.AtomizedMixinPlugin",
+  "client": [
+    "diagnostics.MinecraftFrameSampleMixin",
+    "idle_throttle.MinecraftIdleThrottleMixin",
+    "particle_control.ParticleEngineMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

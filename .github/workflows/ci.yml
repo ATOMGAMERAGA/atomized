@@ -1,0 +1,63 @@
+name: CI
+
+# Reusable pipeline: unit tests across all targets, the >=300 test gate, and the
+# multi-version build. Called by ci-beta.yml and release-stable.yml, and run directly
+# on pull requests and feature-branch pushes for fast feedback (no release here).
+on:
+  workflow_call:
+  pull_request:
+  push:
+    branches:
+      - "claude/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Unit tests + mixin audit (all targets)
+        run: ./gradlew chiseledTest --stacktrace
+
+      - name: Enforce >=300 executed tests
+        run: ./gradlew verifyTestCount
+
+      - name: Build all targets
+        run: ./gradlew chiseledBuild
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "versions/**/build/test-results/**"
+
+      - name: Upload built jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: atomized-jars
+          path: |
+            versions/**/build/libs/atomized-*.jar
+            !versions/**/build/libs/*-sources.jar
+
+  # TODO (milestone M5): add headless client gametests (XVFB + Loom production run)
+  # and the 12-version range-boot check once those Gradle tasks exist.

@@ -1,0 +1,27 @@
+# Gradle
+.gradle/
+build/
+versions/**/build/
+.kotlin/
+
+# Loom / runtime
+run/
+runs/
+versions/**/run/
+versions/**/config/
+versions/**/logs/
+versions/**/saves/
+versions/**/crash-reports/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
