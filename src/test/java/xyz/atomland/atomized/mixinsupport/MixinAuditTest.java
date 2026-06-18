@@ -97,7 +97,9 @@ class MixinAuditTest {
     void noForbiddenInjectors() throws IOException {
         List<String> violations = new ArrayList<>();
         for (Path file : mixinFiles()) {
-            String src = Files.readString(file, StandardCharsets.UTF_8);
+            // Strip comments first so a Javadoc mentioning the banned annotations (as this
+            // very class does) is not a false positive — only real code counts.
+            String src = stripComments(Files.readString(file, StandardCharsets.UTF_8));
             if (containsToken(src, "@Overwrite")) {
                 violations.add(file.getFileName() + " uses @Overwrite (banned — not chainable)");
             }
@@ -113,7 +115,7 @@ class MixinAuditTest {
         SodiumRegions regions = SodiumRegions.load();
         List<String> violations = new ArrayList<>();
         for (Path file : mixinFiles()) {
-            String src = Files.readString(file, StandardCharsets.UTF_8);
+            String src = stripComments(Files.readString(file, StandardCharsets.UTF_8));
             for (String target : extractMixinTargets(src)) {
                 if (regions.isForbidden(target)) {
                     violations.add(file.getFileName() + " targets Sodium-rewritten class '" + target + "'");
@@ -182,6 +184,57 @@ class MixinAuditTest {
         return targets;
     }
 
+    /** Removes block and line comments (keeps string literals so target="..." still parses). */
+    static String stripComments(String src) {
+        StringBuilder out = new StringBuilder(src.length());
+        int i = 0;
+        int n = src.length();
+        boolean inString = false;
+        boolean inChar = false;
+        while (i < n) {
+            char c = src.charAt(i);
+            if (inString) {
+                out.append(c);
+                if (c == '\\' && i + 1 < n) {
+                    out.append(src.charAt(++i));
+                } else if (c == '"') {
+                    inString = false;
+                }
+                i++;
+            } else if (inChar) {
+                out.append(c);
+                if (c == '\\' && i + 1 < n) {
+                    out.append(src.charAt(++i));
+                } else if (c == '\'') {
+                    inChar = false;
+                }
+                i++;
+            } else if (c == '"') {
+                inString = true;
+                out.append(c);
+                i++;
+            } else if (c == '\'') {
+                inChar = true;
+                out.append(c);
+                i++;
+            } else if (c == '/' && i + 1 < n && src.charAt(i + 1) == '/') {
+                while (i < n && src.charAt(i) != '\n') {
+                    i++;
+                }
+            } else if (c == '/' && i + 1 < n && src.charAt(i + 1) == '*') {
+                i += 2;
+                while (i + 1 < n && !(src.charAt(i) == '*' && src.charAt(i + 1) == '/')) {
+                    i++;
+                }
+                i += 2;
+            } else {
+                out.append(c);
+                i++;
+            }
+        }
+        return out.toString();
+    }
+
     private static boolean containsToken(String src, String token) {
         int idx = src.indexOf(token);
         while (idx >= 0) {
@@ -215,6 +268,17 @@ class MixinAuditTest {
         // A class named "@OverwriteHelperThing" must not trip the @Overwrite check.
         assertFalse(containsToken("@OverwriteHelper x", "@Overwrite"));
         assertTrue(containsToken("@Overwrite\npublic void x", "@Overwrite"));
+    }
+
+    @Test
+    void stripCommentsRemovesCommentsButKeepsStrings() {
+        assertFalse(containsToken(stripComments("// uses @Overwrite here\ncode"), "@Overwrite"));
+        assertFalse(containsToken(stripComments("/* never @Redirect */ code"), "@Redirect"));
+        // A targets="..." string survives stripping so it can still be parsed.
+        String kept = stripComments("@Mixin(targets = \"net.foo.Bar\") /* @Overwrite mention */");
+        assertTrue(kept.contains("net.foo.Bar"));
+        assertFalse(containsToken(kept, "@Overwrite"));
+        assertTrue(extractMixinTargets(kept).contains("Bar"));
     }
 
     @Test
