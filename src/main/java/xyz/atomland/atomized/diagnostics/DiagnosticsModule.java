@@ -1,5 +1,7 @@
 package xyz.atomland.atomized.diagnostics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.atomland.atomized.config.AtomizedConfig;
 import xyz.atomland.atomized.core.AtomizedModule;
 import xyz.atomland.atomized.core.ModuleContext;
@@ -20,9 +22,22 @@ public final class DiagnosticsModule implements AtomizedModule {
     /** A frame slower than this (ms) is logged by the lag-spike logger (master plan §6.10b). */
     public static final double DEFAULT_SPIKE_THRESHOLD_MS = 50.0;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("Atomized/Diagnostics");
+    /** Minimum gap between lag-spike log lines, so a stutter storm cannot spam the log. */
+    private static final long SPIKE_LOG_COOLDOWN_NANOS = 3_000_000_000L;
+
+    /** The live instance, so the frame-sampling mixin can feed it without plumbing. */
+    private static volatile DiagnosticsModule active;
+
     private FrameTimeStats stats;
     private boolean hudVisible;
     private double spikeThresholdMs = DEFAULT_SPIKE_THRESHOLD_MS;
+    private long lastSpikeLogNanos;
+
+    /** The running diagnostics module, or {@code null} if disabled/not yet initialized. */
+    public static DiagnosticsModule active() {
+        return active;
+    }
 
     @Override
     public String id() {
@@ -36,6 +51,7 @@ public final class DiagnosticsModule implements AtomizedModule {
         // HUD ships off (master plan §6.10 default); the rest stays ready.
         this.hudVisible = context.config().getBoolean(id(), "hud_visible", false);
         this.spikeThresholdMs = context.config().getDouble(id(), "spike_threshold_ms", DEFAULT_SPIKE_THRESHOLD_MS);
+        active = this;
     }
 
     @Override
@@ -44,10 +60,31 @@ public final class DiagnosticsModule implements AtomizedModule {
         this.spikeThresholdMs = config.getDouble(id(), "spike_threshold_ms", spikeThresholdMs);
     }
 
-    /** Records a frame duration (nanoseconds) into the statistics window. */
+    /** Records a frame duration (nanoseconds) into the statistics window and logs spikes. */
     public void recordFrame(long durationNanos) {
-        if (stats != null && durationNanos > 0) {
-            stats.record(durationNanos);
+        if (stats == null || durationNanos <= 0) {
+            return;
+        }
+        stats.record(durationNanos);
+        if (isSpike(durationNanos)) {
+            logSpike(durationNanos);
+        }
+    }
+
+    private void logSpike(long durationNanos) {
+        long now = System.nanoTime();
+        if (now - lastSpikeLogNanos < SPIKE_LOG_COOLDOWN_NANOS) {
+            return;
+        }
+        lastSpikeLogNanos = now;
+        try {
+            LOGGER.info("Frame spike: {} ms (threshold {} ms). avg {} FPS, 1% low {} FPS.",
+                    String.format("%.1f", durationNanos / 1_000_000.0),
+                    String.format("%.0f", spikeThresholdMs),
+                    String.format("%.0f", stats.averageFps()),
+                    String.format("%.0f", stats.onePercentLowFps()));
+        } catch (RuntimeException ignored) {
+            // Logging must never disturb the render thread.
         }
     }
 

@@ -37,6 +37,11 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
 
+    // MixinExtras — chainable injectors only (golden rule §1). Bundled in Fabric Loader
+    // 0.15+, so compileOnly + annotationProcessor; never shaded into the jar.
+    compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4")
+
     // Optional integrations — compiled against, guarded at runtime, never required.
     modCompileOnly("com.terraformersmc:modmenu:${property("modmenu_version")}")
     modCompileOnly("maven.modrinth:sodium:${property("sodium_version")}")

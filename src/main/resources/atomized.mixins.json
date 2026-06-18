@@ -4,7 +4,9 @@
   "package": "xyz.atomland.atomized.mixin",
   "compatibilityLevel": "JAVA_21",
   "plugin": "xyz.atomland.atomized.mixinsupport.AtomizedMixinPlugin",
-  "client": [],
+  "client": [
+    "diagnostics.MinecraftFrameSampleMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
