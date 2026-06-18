@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.atomland.atomized.command.AtomizedCommand;
 import xyz.atomland.atomized.core.ModuleManager;
+import xyz.atomland.atomized.diagnostics.DiagnosticsModule;
 import xyz.atomland.atomized.gui.AtomizedKeybinds;
+import xyz.atomland.atomized.modules.framepacing.FramePacingModule;
 
 /**
  * Client entrypoint for Atomized.
@@ -33,6 +35,8 @@ public final class Atomized implements ClientModInitializer {
 
         ModuleManager manager = new ModuleManager(boot.panicSwitch(), loader::isModLoaded, boot.minecraftVersion());
         // Optimization modules are registered here as they land (milestones M3/M4).
+        manager.register(new DiagnosticsModule());
+        manager.register(new FramePacingModule());
         manager.initAll(boot.configManager().current(), boot.compat());
         boot.configManager().addListener(manager::onConfigChange);
         moduleManager = manager;
